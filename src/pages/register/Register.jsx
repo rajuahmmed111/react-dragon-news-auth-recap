@@ -1,38 +1,32 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "../Shared/Navbar/Navbar";
 import { useContext } from "react";
-import { AuthContext } from "../register/AuthProvider";
+import { AuthContext } from "./AuthProvider";
 
-const Login = () => {
+const Register = () => {
 
-    const { signIn } = useContext(AuthContext);
-    const location = useLocation();
-    const navigate = useNavigate();
-    console.log('location in the login page',location);
+    const { createUser } = useContext(AuthContext);
 
-    const handleLogin = e => {
+    const handleRegister = e => {
         e.preventDefault();
 
-        // const email = e.target.email.value;
-        // const password = e.target.password.value;
-        // console.log(email, password);
-
-        // or
         console.log(e.currentTarget);
         const form = new FormData(e.currentTarget)
+
+        const name = form.get('name')
+        const photo = form.get('photo')
         const email = form.get('email')
         const password = form.get('password')
-        console.log(email, password);
-        signIn(email, password)
-            .then(result => {
-                console.log(result.user);
+        console.log(name, photo, email, password);
 
-                // navigate after login
-                navigate(location?.state ? location.state : '/');
-            })
-            .catch(error => {
-                console.error(error);
-            })
+        // create 
+        createUser (email, password)
+        .then( result => {
+            console.log(result.user);
+        })
+        .catch( error => {
+            console.error(error);
+        })
     }
 
     return (
@@ -40,9 +34,30 @@ const Login = () => {
             <Navbar></Navbar>
 
             <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl mx-auto bg-base-100">
-                <h2 className="text-2xl font-bold text-center mt-5">Login Your Account</h2>
-                <form onSubmit={handleLogin} className="card-body">
+                <h2 className="text-2xl font-bold text-center mt-5">Please register</h2>
+                <form onSubmit={handleRegister} className="card-body">
                     <div className="form-control">
+                        <label className="label">
+                            <span className="label-text">Name</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Your name"
+                            className="input input-bordered"
+                            required
+                        />
+                        <label className="label">
+                            <span className="label-text">Name</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="photo"
+                            placeholder="Photo URL"
+                            className="input input-bordered"
+                            required
+                        />
+
                         <label className="label">
                             <span className="label-text">Email</span>
                         </label>
@@ -70,13 +85,13 @@ const Login = () => {
                         </label>
                     </div>
                     <div className="form-control mt-6">
-                        <button className="btn btn-primary">Login</button>
+                        <button className="btn btn-primary">Register</button>
                     </div>
                 </form>
-                <p className="text-center">Do not have an account?<Link className="text-blue-600 font-bold" to='register'>Register</Link></p>
+                <p className="text-center">Already have an account ? <Link className="text-blue-600 font-bold" to='/login'>Login</Link></p>
             </div>
         </div>
     );
 };
 
-export default Login;
+export default Register;
